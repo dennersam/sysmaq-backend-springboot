@@ -3,14 +3,14 @@ package dennerdev.com.br.sysmaq.service;
 import dennerdev.com.br.sysmaq.dto.request.AtivosDTO;
 import dennerdev.com.br.sysmaq.dto.response.MessageResponseDTO;
 import dennerdev.com.br.sysmaq.dto.mapper.AtivosMapper;
+import dennerdev.com.br.sysmaq.exception.AtivosNotFoundException;
 import dennerdev.com.br.sysmaq.models.Ativos;
 import dennerdev.com.br.sysmaq.repository.AtivoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 
@@ -26,7 +26,6 @@ public class AtivosService {
         this.ativoRepository = ativoRepository;
     }
 
-    @PostMapping
     public MessageResponseDTO createAtivo(AtivosDTO ativosDTO){
         Ativos ativosToSave = ativosMapper.toModel(ativosDTO);
 
@@ -37,12 +36,25 @@ public class AtivosService {
                 .build();
     }
 
-
-    @GetMapping
     public List<AtivosDTO> listAll() {
         List<Ativos> allAtivos = ativoRepository.findAll();
         return allAtivos.stream()
                 .map(ativosMapper::toDTO)
                 .collect(Collectors.toList());
+    }
+
+    public AtivosDTO findById(Long id) throws AtivosNotFoundException{
+        Ativos ativos = verifyIfExists(id);
+        return ativosMapper.toDTO(ativos);
+    }
+
+    public void delete(Long id) throws AtivosNotFoundException{
+        verifyIfExists(id);
+        ativoRepository.deleteById(id);
+    }
+
+    private Ativos verifyIfExists(Long id) throws AtivosNotFoundException{
+        return ativoRepository.findById(id)
+                .orElseThrow(()-> new AtivosNotFoundException(id));
     }
 }
