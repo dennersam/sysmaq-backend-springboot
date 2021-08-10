@@ -42,9 +42,9 @@ public class AtivosController {
         ativosService.delete(id);
     }
 
-//    @PutMapping("/{id}")
-//    public AtivosDTO updateById(@PathVariable Long id){
-//        return ativosService.updateById(id);
-//    }
+    @PutMapping("/{id}")
+    public MessageResponseDTO updateById(@PathVariable Long id, @Valid @RequestBody AtivosDTO ativosDTO) throws AtivosNotFoundException{
+        return ativosService.updateById(id, ativosDTO);
+    }
 
 }
