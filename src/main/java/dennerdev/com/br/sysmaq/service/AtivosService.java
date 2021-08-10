@@ -6,6 +6,7 @@ import dennerdev.com.br.sysmaq.dto.mapper.AtivosMapper;
 import dennerdev.com.br.sysmaq.exception.AtivosNotFoundException;
 import dennerdev.com.br.sysmaq.models.Ativos;
 import dennerdev.com.br.sysmaq.repository.AtivoRepository;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,16 +15,12 @@ import java.util.stream.Collectors;
 
 
 @Service
+@AllArgsConstructor(onConstructor = @__(@Autowired))
 public class AtivosService {
 
     private final AtivoRepository ativoRepository;
 
     private final AtivosMapper ativosMapper = AtivosMapper.INSTANCE;
-
-    @Autowired
-    public AtivosService(AtivoRepository ativoRepository) {
-        this.ativoRepository = ativoRepository;
-    }
 
     public MessageResponseDTO createAtivo(AtivosDTO ativosDTO){
         Ativos ativosToSave = ativosMapper.toModel(ativosDTO);
